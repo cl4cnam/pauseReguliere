@@ -18,7 +18,7 @@ nbreSecondeDelaiAvertissement_default = 5*60
 
 # textes
 #--------
-text_lancementPause = 'Démmarer la pause dans %s secondes' % nbreSecondeDelaiAvertissement
+text_lancementPause = 'Démarrer la pause dans %s secondes' % nbreSecondeDelaiAvertissement
 text_lancementpauseAutomatique = 'Pause automatique dans %s secondes' % nbreSecondeDelaiAvertissement_default
 
 #graphisme
@@ -31,8 +31,8 @@ fond_fenetre_pauseFini ='#92ff92'
 fond_fenetre_alerte ='#ffccaa'
 
 #images
-img_sport = 'sport.jpg'
-img_travail = 'travail.png'
+path_img_sport = 'sport.jpg'
+path_img_travail = 'travail.png'
 
 
 # Fenêtre de mise en pause
@@ -54,6 +54,7 @@ def switchToAvertissement():
 	root['bg']=fond_fenetre_alerte
 	petiteFenetre()
 	texte['text'] = text_lancementpauseAutomatique
+	labelImage.pack_forget()
 	bouton['state'] = 'normal'
 	bouton['text']=text_lancementPause
 	bouton['bg'] = couleur_boutons
@@ -74,16 +75,15 @@ def switchToPause():
 	root.state('normal')
 	grandeFenetre()
 	texte['text'] = 'Maintenant : pause de %s secondes !' % nbreSecondePause
-	# ~ img = Image.open(img_sport) 
-	# ~ img_tk = ImageTk.PhotoImage(img)
-	# ~ label = Label(root, image=img_tk) 
-	# ~ label.pack()
+	labelImage['image'] = img_tk_sport
+	labelImage.pack()
 	bouton.pack_forget()
 	root.after(1000 * nbreSecondePause, switchToPreRepriseTravail)
 
 def switchToPreRepriseTravail():
 	root['bg']=fond_fenetre_pauseFini
 	texte['text'] = 'C\'est parti pour une période de %s minutes !' % (nbreSecondePeriodeTravail // 60)
+	labelImage['image'] = img_tk_travail
 	bouton.pack()
 	bouton['state'] = 'normal'
 	bouton['text']='OK'
@@ -122,10 +122,18 @@ bouton['padx'] = 20
 bouton['pady'] = 20
 bouton.pack()  # pour afficher sur la fenêtre
 
+# fabrique une image
+img_sport = Image.open(path_img_sport)
+img_tk_sport = ImageTk.PhotoImage(img_sport)
+img_travail = Image.open(path_img_travail)
+img_tk_travail = ImageTk.PhotoImage(img_travail)
+labelImage = Label(root, image=img_tk_travail)
+labelImage.pack()
+
 # lance le programme de pause
 switchToTravail()
 
-# root.mainloop()
-while True:
-	root.update_idletasks()
-	root.update()
+root.mainloop()
+# ~ while True:
+	# ~ root.update_idletasks()
+	# ~ root.update()
